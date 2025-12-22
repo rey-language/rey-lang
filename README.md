@@ -9,3 +9,4 @@ rey is an experimental programming language.
 4. if a type is specified, it is enforced at compile time
 5. if no type is specified, the compiler infers it and may emit warnings
 6. once a type is specified, it cannot change
+7. rey is designed to be simple and easy to learn
