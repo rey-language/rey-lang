@@ -23,6 +23,7 @@ pub enum TokenKind {
     Slash,
     Star,
     Percent,
+    Colon,
 
     //keywords
     Var,
@@ -40,7 +41,8 @@ pub enum TokenKind {
     Identifier(String),
     StringLiteral(String),
     NumberLiteral(f64),
-
+    BooleanLiteral(bool),
+    
     //operators
     Equal,
     EqualEqual,

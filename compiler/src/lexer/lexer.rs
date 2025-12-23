@@ -52,16 +52,18 @@ impl<'a> Lexer<'a> {
             '-' => Ok(self.simpleToken(TokenKind::Minus, start)),
             '*' => Ok(self.simpleToken(TokenKind::Star, start)),
             '/' => Ok(self.simpleToken(TokenKind::Slash, start)),
+            ':' => Ok(self.simpleToken(TokenKind::Colon, start)),
+            '!' => Ok(self.simpleToken(TokenKind::Not, start)),
+            
 
-               '=' => {
-        let kind = if self.matchNext('=') {
-            TokenKind::EqualEqual
-                } else {
-                    TokenKind::Equal
-                };
-                Ok(self.simpleToken(kind, start))
+            '=' => {
+                let kind = if self.matchNext('=') {
+                TokenKind::EqualEqual
+                    } else {
+                        TokenKind::Equal
+                    };
+                    Ok(self.simpleToken(kind, start))
             }
-
             '<' => {
                 let kind = if self.matchNext('=') {
                     TokenKind::LessEqual
@@ -69,7 +71,6 @@ impl<'a> Lexer<'a> {
                     TokenKind::Less
                 };
                 Ok(self.simpleToken(kind, start))}
-
             '>' => {
                 let kind = if self.matchNext('=') {
                     TokenKind::GreaterEqual}
@@ -77,6 +78,27 @@ impl<'a> Lexer<'a> {
                     TokenKind::Greater
                 };
                 Ok(self.simpleToken(kind, start))
+            }
+
+
+            int if int.is_digit(10) => {
+                let mut number = String::new();
+                number.push(int);
+
+                while let Some(ch) = self.cursor.peek() {
+                    if ch.is_digit(10) || ch == '.' {
+                        self.cursor.advance();
+                        number.push(ch);
+                    } else {
+                        break;
+                    }
+                }
+
+                let value: f64 = number.parse().unwrap();
+                Ok(Token {
+                    kind: TokenKind::NumberLiteral(value),
+                    span: Span::new(start, self.cursor.position()),
+                })
             }
 
             _ => Err(LexerError::UnexpectedCharacter {
