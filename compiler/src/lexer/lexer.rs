@@ -48,13 +48,52 @@ impl<'a> Lexer<'a> {
             '{' => Ok(self.simpleToken(TokenKind::LeftBrace, start)),
             '}' => Ok(self.simpleToken(TokenKind::RightBrace, start)),
             ';' => Ok(self.simpleToken(TokenKind::Semicolon, start)),
+            '+' => Ok(self.simpleToken(TokenKind::Plus, start)),
+            '-' => Ok(self.simpleToken(TokenKind::Minus, start)),
+            '*' => Ok(self.simpleToken(TokenKind::Star, start)),
+            '/' => Ok(self.simpleToken(TokenKind::Slash, start)),
+
+               '=' => {
+        let kind = if self.matchNext('=') {
+            TokenKind::EqualEqual
+                } else {
+                    TokenKind::Equal
+                };
+                Ok(self.simpleToken(kind, start))
+            }
+
+            '<' => {
+                let kind = if self.matchNext('=') {
+                    TokenKind::LessEqual
+                } else {
+                    TokenKind::Less
+                };
+                Ok(self.simpleToken(kind, start))}
+
+            '>' => {
+                let kind = if self.matchNext('=') {
+                    TokenKind::GreaterEqual}
+             else {
+                    TokenKind::Greater
+                };
+                Ok(self.simpleToken(kind, start))
+            }
+
             _ => Err(LexerError::UnexpectedCharacter {
                 found: ch,
                 span: Span::new(start, self.cursor.position()),
             }),
         }
     }
-
+    fn matchNext(&mut self, expected: char) -> bool {
+     match self.cursor.peek() {
+        Some(ch) if ch == expected => {
+            self.cursor.advance();
+            true
+        }
+        _ => false,
+     }
+        }
     fn lexString(&mut self, start: usize) -> Result<Token, LexerError> {
         let mut value = String::new();
 

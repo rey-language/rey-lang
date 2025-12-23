@@ -4,7 +4,11 @@ use lexer::{Lexer, TokenKind};
 
 fn main() {
     let source = r#"
-        var x = "hello";
+        var x = "hello": int;
+
+        func greet() {
+            print(x);
+        }
         var y = "world";
     "#;
 
