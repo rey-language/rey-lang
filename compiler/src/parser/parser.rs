@@ -35,6 +35,34 @@ impl Parser {
         self.consume(&TokenKind::Semicolon, "Expected ';' after expression.");
     }
 
+    fn parseTypeAnnotation(&mut self) -> Option<Type> {
+    if self.matchToken(&TokenKind::Colon) {
+        match &self.peek().kind {
+            TokenKind::Identifier(name) => {
+                let ty = Type { name: name.clone() };
+                self.advance();
+                Some(ty);
+            } _ => self.error("Expected type name after ':'"),}}
+    else {None}
+    }
+    fn parseAdditive(&mut self) -> Expr {
+        let mut expr = self.parseUnary();
+
+        while matches!(self.peek().kind, TokenKind::Plus | TokenKind::Minus) {
+            let op = self.peek().kind.clone();
+            self.advance();
+            let right = self.parseUnary();
+
+            expr = Expr::Binary {
+                left: Box::new(expr),
+                op,
+                right: Box::new(right),
+            };
+        }
+        expr
+    }
+
+
    //expressions
     fn parseExpression(&mut self) {
         match &self.peek().kind {

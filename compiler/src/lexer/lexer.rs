@@ -55,11 +55,9 @@ impl<'a> Lexer<'a> {
             '*' => Ok(self.simpleToken(TokenKind::Star, start)),
             '/' => Ok(self.simpleToken(TokenKind::Slash, start)),
             ':' => Ok(self.simpleToken(TokenKind::Colon, start)),
-            '!' => Ok(self.simpleToken(TokenKind::Not, start)),
             '.' => Ok(self.simpleToken(TokenKind::Dot, start)),
             ',' => Ok(self.simpleToken(TokenKind::Comma, start)),
             '%' => Ok(self.simpleToken(TokenKind::Percent, start)),
-            
 
             '=' => {
                 let kind = if self.matchNext('=') {
@@ -84,7 +82,14 @@ impl<'a> Lexer<'a> {
                 };
                 Ok(self.simpleToken(kind, start))
             }
-
+            '!' => {
+                let kind = if self.matchNext('=') {
+                    TokenKind::NotEqual
+                } else {
+                    TokenKind::Not
+                };
+                Ok(self.simpleToken(kind, start))
+            }
 
             int if int.is_digit(10) => {
                 let mut number = String::new();
@@ -157,6 +162,8 @@ impl<'a> Lexer<'a> {
             "return" => TokenKind::Return,
             "if" => TokenKind::If,
             "else" => TokenKind::Else,
+            "while" => TokenKind::While,
+            "for" => TokenKind::For,
             "true" => TokenKind::True,
             "false" => TokenKind::False,
             "null" => TokenKind::Null,

@@ -1,0 +1,21 @@
+//rey has 4 types of variables
+
+///
+mutable type, immutable value
+mutalle type, mutable value
+immutable type, immutable value
+immutable type, mutable value
+///
+
+var name = "misbah";
+name = 10; //allowed
+name = "testing" //allowed
+
+var age = 10: int;
+age = 20;//allowed
+age = "test" //not allowed 
+
+
+final var flag = true: bool;
+flag = false; //not allowed
+flag = 10; //not allowed

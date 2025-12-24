@@ -25,6 +25,7 @@ pub enum TokenKind {
     Percent,
     Colon,
     Not, 
+
     //keywords
     Var,
     Func,
@@ -48,6 +49,7 @@ pub enum TokenKind {
     EqualEqual,
     Greater,
     GreaterEqual,
+    NotEqual,
     Less,
     LessEqual,
     And,
