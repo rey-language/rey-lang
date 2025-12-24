@@ -24,7 +24,7 @@ pub enum TokenKind {
     Star,
     Percent,
     Colon,
-
+    Not, 
     //keywords
     Var,
     Func,

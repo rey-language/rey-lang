@@ -1,3 +1,5 @@
+use crate::lexer::token;
+
 use super::{
     cursor::Cursor,
     error::LexerError,
@@ -54,6 +56,9 @@ impl<'a> Lexer<'a> {
             '/' => Ok(self.simpleToken(TokenKind::Slash, start)),
             ':' => Ok(self.simpleToken(TokenKind::Colon, start)),
             '!' => Ok(self.simpleToken(TokenKind::Not, start)),
+            '.' => Ok(self.simpleToken(TokenKind::Dot, start)),
+            ',' => Ok(self.simpleToken(TokenKind::Comma, start)),
+            '%' => Ok(self.simpleToken(TokenKind::Percent, start)),
             
 
             '=' => {
