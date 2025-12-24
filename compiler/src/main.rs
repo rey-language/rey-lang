@@ -1,29 +1,22 @@
 mod lexer;
+mod parser;
 
 use lexer::{Lexer, TokenKind};
+use parser::{Parser};
 
 fn main() {
     let source = r#"
-        var x = "hello": String;
-
-        func greet(arg: String): Void {
-            var x = 42: int;
-            var y = x + 1: int;
-
-            print(x+y);
-        }
-        var y = "world";
-        greet(y, a);
-
+        var x = "hello";
     "#;
 
     let mut lexer = Lexer::new(source);
-
+    let mut tokens = Vec::new();
+    
     loop {
         match lexer.nextToken() {
             Ok(token) => {
                 println!("{:?}", token);
-
+                tokens.push(token.clone());
                 if token.kind == TokenKind::Eof {
                     break;
                 }
@@ -33,4 +26,9 @@ fn main() {
                 break;}
             }
     }
+    println!("Parsing Started.");
+    let mut parser = Parser::new(tokens);
+    parser.parse();
+    println!("Program parsed!");
+
 }
