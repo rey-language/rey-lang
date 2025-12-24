@@ -1,0 +1,17 @@
+use super::Literal;
+use crate::lexer::TokenKind;
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Expr {
+    Literal(Literal),
+    Binary {
+        left: Box<Expr>,
+        op: TokenKind,
+        right: Box<Expr>,
+    },
+    Variable(String),
+    Call {
+        callee: Box<Expr>,
+        args: Vec<Expr>,
+    },
+}

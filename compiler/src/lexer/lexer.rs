@@ -8,14 +8,16 @@ use super::{
 };
 
 pub struct Lexer<'a> {
-    cursor: Cursor<'a>,}
+    cursor: Cursor<'a>,
+}
 
 impl<'a> Lexer<'a> {
     //new lexer
     pub fn new(input: &'a str) -> Self {
         Self {
             cursor: Cursor::new(input),
-        } }
+        }
+    }
 
     //next token
     pub fn nextToken(&mut self) -> Result<Token, LexerError> {
@@ -36,14 +38,13 @@ impl<'a> Lexer<'a> {
                 return Ok(Token {
                     kind: TokenKind::Eof,
                     span: Span::new(start, start),
-                }); }
+                });
+            }
         };
         match ch {
             '"' => self.lexString(start),
 
-            c if c.is_alphabetic() || c == '_' => {
-                Ok(self.lexIdentifier(start, c))
-            }
+            c if c.is_alphabetic() || c == '_' => Ok(self.lexIdentifier(start, c)),
 
             '(' => Ok(self.simpleToken(TokenKind::LeftParen, start)),
             ')' => Ok(self.simpleToken(TokenKind::RightParen, start)),
@@ -61,11 +62,11 @@ impl<'a> Lexer<'a> {
 
             '=' => {
                 let kind = if self.matchNext('=') {
-                TokenKind::EqualEqual
-                    } else {
-                        TokenKind::Equal
-                    };
-                    Ok(self.simpleToken(kind, start))
+                    TokenKind::EqualEqual
+                } else {
+                    TokenKind::Equal
+                };
+                Ok(self.simpleToken(kind, start))
             }
             '<' => {
                 let kind = if self.matchNext('=') {
@@ -73,11 +74,12 @@ impl<'a> Lexer<'a> {
                 } else {
                     TokenKind::Less
                 };
-                Ok(self.simpleToken(kind, start))}
+                Ok(self.simpleToken(kind, start))
+            }
             '>' => {
                 let kind = if self.matchNext('=') {
-                    TokenKind::GreaterEqual}
-             else {
+                    TokenKind::GreaterEqual
+                } else {
                     TokenKind::Greater
                 };
                 Ok(self.simpleToken(kind, start))
@@ -118,14 +120,14 @@ impl<'a> Lexer<'a> {
         }
     }
     fn matchNext(&mut self, expected: char) -> bool {
-     match self.cursor.peek() {
-        Some(ch) if ch == expected => {
-            self.cursor.advance();
-            true
+        match self.cursor.peek() {
+            Some(ch) if ch == expected => {
+                self.cursor.advance();
+                true
+            }
+            _ => false,
         }
-        _ => false,
-     }
-        }
+    }
     fn lexString(&mut self, start: usize) -> Result<Token, LexerError> {
         let mut value = String::new();
 
@@ -172,12 +174,14 @@ impl<'a> Lexer<'a> {
 
         Token {
             kind,
-            span: Span::new(start, self.cursor.position()),}
+            span: Span::new(start, self.cursor.position()),
+        }
     }
 
     fn simpleToken(&self, kind: TokenKind, start: usize) -> Token {
         Token {
             kind,
-            span: Span::new(start, start + 1),}
- }
+            span: Span::new(start, start + 1),
+        }
+    }
 }

@@ -4,16 +4,11 @@ use super::span::Span;
 pub struct LexError {
     pub message: String,
     pub span: Span,
-}   
+}
 
 #[derive(Debug, Clone, PartialEq)]
-pub enum  LexerError {
-    UnexpectedCharacter {
-        found: char,
-        span: Span,
-    },
+pub enum LexerError {
+    UnexpectedCharacter { found: char, span: Span },
 
-    UnterminatedString {
-        span: Span,
-    },
+    UnterminatedString { span: Span },
 }
