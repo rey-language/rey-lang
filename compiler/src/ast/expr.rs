@@ -14,4 +14,17 @@ pub enum Expr {
         callee: Box<Expr>,
         args: Vec<Expr>,
     },
+    Unary {
+        op: TokenKind,
+        right: Box<Expr>,
+    },
+
+    Assign {
+        name: String,
+        value: Box<Expr>,
+    },
+    Get {
+        object: Box<Expr>,
+        name: String,
+    },
 }

@@ -1,0 +1,21 @@
+func main(): Void {
+    println("Hello World!");
+    var a = 10;
+    var b = 20;
+    println(a+b);
+
+    
+}
+
+
+func isPrime(a: int): bool {
+    var flag: bool = false;
+    var c = 0; 
+    for i in range(0,a) { 
+        if (a%i==0)
+            c++;
+    }
+    if (c==2)
+        flag = true;
+    return flag;
+}
