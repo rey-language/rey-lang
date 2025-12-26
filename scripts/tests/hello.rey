@@ -1,7 +1,6 @@
 //hello world in rey
 
 
-
 func main(): Void {
     println("Hello World!");
     var a = 10;
@@ -10,3 +9,26 @@ func main(): Void {
 }
 
 
+func isPrime(a: int): bool {
+
+    var name: String = System.inp();
+    var age = System.inp();
+    if (age>18){ 
+        if name.startsWith('M'){ 
+            print("Please Proceed"); 
+            } 
+        else { 
+            print("You don't qualify"); 
+            prg.exit(); 
+            }
+        }
+    var flag: String = false;
+    var c = 0; 
+    for var i: int in range(0,a) { 
+        if a%i==0
+            c++;
+    }
+    if c==2 
+        flag = true;
+    return flag;
+}

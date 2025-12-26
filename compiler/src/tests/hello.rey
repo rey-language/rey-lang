@@ -3,19 +3,21 @@ func main(): Void {
     var a = 10;
     var b = 20;
     println(a+b);
-
-    
 }
 
 
 func isPrime(a: int): bool {
+
+    var name: String = System.inp();
+    var age = System.inp();
+    
     var flag: bool = false;
     var c = 0; 
-    for i in range(0,a) { 
+    for var i: int; in range(0,a) { 
         if (a%i==0)
             c++;
     }
-    if (c==2)
+    if c==2 
         flag = true;
     return flag;
 }
