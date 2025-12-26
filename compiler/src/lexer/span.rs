@@ -1,3 +1,5 @@
+#![allow(non_snake_case)]
+
 //gonna use for error and diagnostics
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct Span {

@@ -1,3 +1,5 @@
+#![allow(non_snake_case)]
+
 mod ast;
 mod lexer;
 mod parser;
@@ -7,7 +9,7 @@ use parser::Parser;
 use std::fs;
 
 fn main() {
-    let source = fs::read_to_string("../scripts/tests/hello.rey")
+    let source = fs::read_to_string("/Users/misbahkhursheed/Developer/rey-language/rey-lang/compiler/src/tests/hello.rey")
         .expect("Failed to read hello.rey file");
 
     let mut lexer = Lexer::new(&source);
