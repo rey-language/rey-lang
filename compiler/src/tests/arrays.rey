@@ -1,7 +1,7 @@
 // Array usage
 
 func  main(): Void {
-    var arr = [1, 2, 3, 4, 5];
+    var arr: int = [1, 2, 3, 4, 5];
 
     var i = 0;
     while i < 5 {
