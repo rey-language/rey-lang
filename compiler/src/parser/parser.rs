@@ -32,6 +32,18 @@ impl Parser {
             Ok(Some(self.parseVarDeclaration()?))
         } else if self.matchToken(&TokenKind::Func) {
             Ok(Some(self.parseFuncDeclaration()?))
+        } else if self.matchToken(&TokenKind::If) {
+            Ok(Some(self.parseIfStatement()?))
+        } else if self.matchToken(&TokenKind::While) {
+            Ok(Some(self.parseWhileStatement()?))
+        } else if self.matchToken(&TokenKind::For) {
+            Ok(Some(self.parseForStatement()?))
+        } else if self.matchToken(&TokenKind::Break) {
+            Ok(Some(self.parseBreakStatement()?))
+        } else if self.matchToken(&TokenKind::Continue) {
+            Ok(Some(self.parseContinueStatement()?))
+        } else if self.matchToken(&TokenKind::Return) {
+            Ok(Some(self.parseReturnStatement()?))
         } else {
             Ok(Some(self.parseExpressionStatement()?))
         }
@@ -105,6 +117,108 @@ impl Parser {
             return_ty,
             body,
         })
+    }
+
+    fn parseIfStatement(&mut self) -> Result<Stmt, ParserError> {
+        self.consume(&TokenKind::LeftParen, "Expected '(' after 'if'.")?;
+        let condition = self.parseExpression()?;
+        self.consume(&TokenKind::RightParen, "Expected ')' after condition.")?;
+
+        self.consume(&TokenKind::LeftBrace, "Expected '{' after condition.")?;
+        let then_branch = self.parseBlock()?;
+        self.consume(&TokenKind::RightBrace, "Expected '}' after then branch.")?;
+
+        let else_branch = if self.matchToken(&TokenKind::Else) {
+            self.consume(&TokenKind::LeftBrace, "Expected '{' after 'else'.")?;
+            let block = self.parseBlock()?;
+            self.consume(&TokenKind::RightBrace, "Expected '}' after else branch.")?;
+            Some(block)
+        } else {
+            None
+        };
+
+        Ok(Stmt::If {
+            condition,
+            then_branch,
+            else_branch,
+        })
+    }
+
+    fn parseWhileStatement(&mut self) -> Result<Stmt, ParserError> {
+        self.consume(&TokenKind::LeftParen, "Expected '(' after 'while'.")?;
+        let condition = self.parseExpression()?;
+        self.consume(&TokenKind::RightParen, "Expected ')' after condition.")?;
+
+        self.consume(&TokenKind::LeftBrace, "Expected '{' after condition.")?;
+        let body = self.parseBlock()?;
+        self.consume(&TokenKind::RightBrace, "Expected '}' after while body.")?;
+
+        Ok(Stmt::While {
+            condition,
+            body,
+        })
+    }
+
+    fn parseForStatement(&mut self) -> Result<Stmt, ParserError> {
+        // Parse variable name
+        let variable = match self.peek().kind {
+            TokenKind::Identifier(ref name) => name.clone(),
+            _ => return Err(self.error("Expected variable name after 'for'.")),
+        };
+        self.advance();
+
+        self.consume(&TokenKind::In, "Expected 'in' after variable name.")?;
+        match self.peek().kind {
+            TokenKind::Identifier(ref name) if name == "range" => {
+                self.advance();
+            }
+            _ => return Err(self.error("Expected 'range' after 'in'.")),
+        }
+        self.consume(&TokenKind::LeftParen, "Expected '(' after 'range'.")?;
+
+        let start = self.parseExpression()?;
+        self.consume(&TokenKind::Comma, "Expected ',' after start value.")?;
+        let end = self.parseExpression()?;
+
+        self.consume(&TokenKind::RightParen, "Expected ')' after end value.")?;
+        self.consume(&TokenKind::LeftBrace, "Expected '{' after range.")?;
+
+        let body = self.parseBlock()?;
+
+        self.consume(&TokenKind::RightBrace, "Expected '}' after for body.")?;
+
+        Ok(Stmt::For {
+            variable,
+            start,
+            end,
+            body,
+        })
+    }
+
+    fn parseBreakStatement(&mut self) -> Result<Stmt, ParserError> {
+        self.consume(&TokenKind::Semicolon, "Expected ';' after 'break'.")?;
+        Ok(Stmt::Break)
+    }
+
+    fn parseContinueStatement(&mut self) -> Result<Stmt, ParserError> {
+        self.consume(&TokenKind::Semicolon, "Expected ';' after 'continue'.")?;
+        Ok(Stmt::Continue)
+    }
+
+    fn parseBlock(&mut self) -> Result<Vec<Stmt>, ParserError> {
+        let mut statements = Vec::new();
+        while !self.check(&TokenKind::RightBrace) && !self.isAtEnd() {
+            if let Some(stmt) = self.parseStatement()? {
+                statements.push(stmt);
+            }
+        }
+        Ok(statements)
+    }
+
+    fn parseReturnStatement(&mut self) -> Result<Stmt, ParserError> {
+        let expr = self.parseExpression()?;
+        self.consume(&TokenKind::Semicolon, "Expected ';' after return value.")?;
+        Ok(Stmt::Return(expr))
     }
 
     fn parseExpressionStatement(&mut self) -> Result<Stmt, ParserError> {
